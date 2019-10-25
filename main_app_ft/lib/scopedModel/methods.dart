@@ -3,9 +3,24 @@ import 'package:http/http.dart'as http;
 import 'dart:io';
 import 'package:scoped_model/scoped_model.dart';
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 
 mixin Methods on Model {
+  String email='',pass='';
+
+  GetCredentials()async{
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    email=pref.getString("email");
+    pass=pref.getString("pass");
+  }
+
+  SetCredentials(email_in,pass_in)async{
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.setString("email", email_in);
+    pref.setString("pass", pass_in);
+
+  }
 
 }

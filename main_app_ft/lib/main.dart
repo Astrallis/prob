@@ -25,13 +25,22 @@ class MyHomePage extends StatefulWidget {
 
 
 
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
 
+  TextEditingController emailController = new TextEditingController();
+  TextEditingController passController = new TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    mainModel model = ScopedModel.of(context);
+    model.GetCredentials();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final emailIdField = TextFormField(
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
+      controller: emailController,
       decoration: InputDecoration(
           hintText: 'Email Id',
           contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -57,6 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final passwordField = TextFormField(
       autofocus: false,
       obscureText: true,
+      controller: passController,
       decoration: InputDecoration(
           hintText: 'Password',
           contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -134,24 +145,27 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget loginButton(BuildContext context){
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 16.0),
-      child: Material(
-        borderRadius: BorderRadius.circular(30.0),
-        shadowColor: Colors.lightBlueAccent.shade100,
-        elevation: 7.0,
-        child: MaterialButton(
-          minWidth: 200.0,
-          height: 42.0,
-          onPressed: () {
-
-          },
-          color: Colors.lightBlueAccent,
-          child: Text('Log In', style: TextStyle(color: Colors.white)),
+    return ScopedModelDescendant<mainModel>(
+        builder: (context, child, mainModel) {
+          return Padding(
+        padding: EdgeInsets.symmetric(vertical: 16.0),
+        child: Material(
+          borderRadius: BorderRadius.circular(30.0),
+          shadowColor: Colors.lightBlueAccent.shade100,
+          elevation: 7.0,
+          child: MaterialButton(
+            minWidth: 200.0,
+            height: 42.0,
+            onPressed: () {
+              mainModel.SetCredentials(emailController.text, passController.text);
+            },
+            color: Colors.lightBlueAccent,
+            child: Text('Log In', style: TextStyle(color: Colors.white)),
+          ),
         ),
-      ),
-    );
-  }
+      );
+        });
+    }
   Widget registerButton(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -173,3 +187,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+

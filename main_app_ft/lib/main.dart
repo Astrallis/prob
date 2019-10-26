@@ -9,17 +9,66 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScopedModel<mainModel>(
       model: mainModel(),
-      child: MaterialApp(
+      child: ScopedModelDescendant<mainModel>(
+        builder: (context, child, mainModel) {
+      return  MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
 
           primarySwatch: Colors.blue,
         ),
-        home: MyHomePage(),
-      ),
-    );
+
+        home: LoginSuccess()
+//        mainModel.Auth()?LS():MyHomePage(),
+      );
+    }));
+
   }
 }
+
+class LoginSuccess extends StatefulWidget{
+  @override
+  _LSState createState() => _LSState();
+}
+
+class _LSState extends State<LoginSuccess> {
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    mainModel model = ScopedModel.of(context);
+    model.GetCredentials();
+
+    super.initState();
+    print(model.email);
+    print(model.pass);
+
+  }
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    mainModel model = ScopedModel.of(context);
+    model.GetCredentials();
+
+
+    return ScopedModelDescendant<mainModel>(
+        builder: (context, child, mainModel) {
+          return Scaffold(
+//            backgrouRndColor: Colors.black,
+            body: Center(
+              child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+
+               //   Text(),
+                  SizedBox(height: 50,),
+               //   Text(),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+}
+
 
 class MyHomePage extends StatefulWidget {
 
@@ -131,6 +180,10 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(
                 height: 5.0,
               ),
+              showButton(context),
+              SizedBox(
+                height: 5.0,
+              ),
               forgotLabel,
               SizedBox(
                 height: 5.0,
@@ -158,6 +211,7 @@ class _MyHomePageState extends State<MyHomePage> {
             height: 42.0,
             onPressed: () {
               mainModel.SetCredentials(emailController.text, passController.text);
+
             },
             color: Colors.lightBlueAccent,
             child: Text('Log In', style: TextStyle(color: Colors.white)),
@@ -166,6 +220,29 @@ class _MyHomePageState extends State<MyHomePage> {
       );
         });
     }
+
+  Widget showButton(BuildContext context){
+    return ScopedModelDescendant<mainModel>(
+        builder: (context, child, mainModel) {
+          return Padding(
+            padding: EdgeInsets.symmetric(vertical: 16.0),
+            child: Material(
+              borderRadius: BorderRadius.circular(30.0),
+              shadowColor: Colors.lightBlueAccent.shade100,
+              elevation: 7.0,
+              child: MaterialButton(
+                minWidth: 200.0,
+                height: 42.0,
+                onPressed: () {
+                  mainModel.GetCredentials();
+                },
+                color: Colors.lightBlueAccent,
+                child: Text('Show In', style: TextStyle(color: Colors.white)),
+              ),
+            ),
+          );
+        });
+  }
   Widget registerButton(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -186,5 +263,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
+
 }
 
